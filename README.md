@@ -27,9 +27,11 @@ Deploy only `BountyBox(address oracle_, address admin_)`. Both arguments are sta
 | Parameter | Launch value |
 | --- | --- |
 | `oracle_` | `0xEB3e371d6830d20353b15304217be669E02a3136`, the specified platform reviewer EOA |
-| `admin_` | `0x0165e692EbD858a81820C151c95760b5DD141323`, the launch owner supplied in the assignment |
+| `admin_` | `0x0165e692EbD858a81820C151c95760b5DD141323`, the launch owner from the IMD launch policy for this job; the manifest's `$owner` resolves to it |
 
-The constructor accepts `admin_ == address(0)` to select `msg.sender`, as requested, and emits `AdminSet(admin)`. **The launch must pass the explicit owner**, because a factory is the constructor caller. The deployment script requires a nonzero explicit admin; its `run()` passes the configured launch owner. There is no post-deployment initialization.
+**Where the admin address comes from.** The update brief names only the reviewer and says a zero `admin_` selects the deployer. It names no admin wallet, and neither does the job page. The admin value used here is the launch owner stated in the IMD launch policy for this job (chain 4663, "Owner: 0x0165e692ebd858a81820c151c95760b5dd141323"), which is also what the launch manifest's `$owner` placeholder resolves to. The script therefore installs the same admin the factory launch installs. If the launch owner is ever different, change `RobinhoodConfig.ADMIN` so the two deployments keep agreeing; the address is checked against its literal value in `test/DeployBountyBox.t.sol`.
+
+The constructor accepts `admin_ == address(0)` to select `msg.sender`, as requested, and emits `AdminSet(admin)`. **The factory launch must pass the explicit owner**, because the factory is the constructor caller. The script's `run()` passes the configured launch owner. Its `deploy(address(0))` applies the brief's fallback at the script level: the admin becomes the wallet calling the script (pass `--sender`), never the script contract itself. It refuses Foundry's default sender and any contract caller with `UnsafeDeployerFallback`, so an unconfigured dry run cannot install an admin nobody controls. There is no post-deployment initialization.
 
 Network settings live only in `script/RobinhoodConfig.sol`. The RPC is `https://rpc.mainnet.chain.robinhood.com`; the explorer is `https://robin.etherscan.io`. Chain ID is checked before broadcast starts and again in the deployment function. Ethereum mainnet and Base are rejected. The old Ethereum deployment is reference history only; this update neither modifies it nor migrates its funds or state.
 
@@ -81,7 +83,7 @@ Constants: 3-day review, 48-hour default revision, 24-hour to 7-day oracle revis
 - Admin: secure the role, monitor reviewer availability, and use the propose/24h/confirm procedure for future requests. Cancel mistakes before confirmation. Handover requires acceptance; renunciation permanently disables rotation.
 - Creators and workers: keep evidence available and monitor review, revision, and abandonment deadlines. Submit claims for credited funds.
 - Anyone: close eligible slots or settle silent requests; these require transactions and carry no keeper reward.
-- Release operator: independently review the contract, verify the Robinhood deployment and explicit admin, and monitor events. There is no automatic callback, adapter, keeper, backend, or scheduler in this deliverable.
+- Release operator: independently review the contract, verify the Robinhood deployment and that the installed admin is the launch owner (`$owner`), and monitor events. There is no automatic callback, adapter, keeper, backend, or scheduler in this deliverable.
 
 ## Accepted-source provenance
 

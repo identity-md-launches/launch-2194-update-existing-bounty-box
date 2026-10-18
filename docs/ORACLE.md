@@ -2,7 +2,7 @@
 
 ## Constructor and integration
 
-`BountyBox(address oracle_, address admin_)` takes the reviewer EOA and admin explicitly. The launch reviewer is **`0xEB3e371d6830d20353b15304217be669E02a3136`**. Addresses are stored as 20-byte Solidity addresses; EIP-55 checksum spelling is used in source configuration and documentation, because storage has no letter case. A zero oracle reverts. A zero admin selects the deployer and emits `AdminSet(admin)`; the factory launch and supplied script use the explicit launch-owner address from `script/RobinhoodConfig.sol`.
+`BountyBox(address oracle_, address admin_)` takes the reviewer EOA and admin explicitly. The launch reviewer is **`0xEB3e371d6830d20353b15304217be669E02a3136`**. Addresses are stored as 20-byte Solidity addresses; EIP-55 checksum spelling is used in source configuration and documentation, because storage has no letter case. A zero oracle reverts. A zero admin selects the deployer and emits `AdminSet(admin)`. The factory launch passes `$owner`, and the script's `run()` passes the same address from `script/RobinhoodConfig.sol`: the launch owner stated in the IMD launch policy for this job, `0x0165e692EbD858a81820C151c95760b5DD141323`. The brief and job page name no admin wallet; that policy is the address's source. The script's `deploy(address(0))` installs the calling wallet instead, refusing Foundry's default sender and contract callers.
 
 There is **no oracle adapter, request call, or callback interface**. The contract never calls the reviewer. `IOracle`, `IOracleCallback`, `oracleAnswer`, the request gas stipend, and `OracleRequestUnavailable` have been removed. Operators must use the new interface:
 

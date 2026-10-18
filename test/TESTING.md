@@ -19,7 +19,7 @@ Several original assertions directly contradicted this update's requested fixes.
 
 `BountyBox.updates.t.sol` separately tests all seven fixes and all admin/oracle paths. It asserts success, failure, exact boundary behavior, event topics, liabilities, immutable request snapshots, retained worker history, cancellation, and competition between end states. The original three fuzz properties (split conservation, revision clamp, beneficiary isolation) are retained; new fuzz tests exercise late approvals and unauthorized admin callers.
 
-`DeployBountyBox.t.sol` calls the deploy function directly with constants and explicit arguments. It tests the requested reviewer and owner, no accidental script ownership, rejection of zero admin, rejection of mainnet/Base, and the pre-broadcast chain guard. No test reads or writes environment variables or depends on the default script sender.
+`DeployBountyBox.t.sol` calls the deploy function directly with constants and explicit arguments. It checks the configured reviewer and admin against their literal brief and launch-policy values (not the constants against themselves), no accidental script ownership, the zero-admin fallback to the calling wallet, rejection of that fallback for Foundry's default sender and for contract callers, rejection of mainnet/Base, and the pre-broadcast chain guard. No test reads or writes environment variables; the default-sender test pranks that address explicitly rather than relying on it.
 
 Run the complete offline checks from the repository root:
 
