@@ -1,0 +1,13 @@
+{
+  "kind": "evm_contracts",
+  "contracts": [
+    {
+      "contract": "BountyBox",
+      "constructorArgs": [
+        "0xEB3e371d6830d20353b15304217be669E02a3136",
+        "$owner"
+      ]
+    }
+  ],
+  "notes": "Deploy the accepted BountyBox application on Robinhood Chain (chain ID 4663). Constructor arguments are the specified platform reviewer EOA and the launch owner as explicit admin, avoiding the factory-as-admin fallback. The admin may propose, cancel and confirm oracle changes after a 24-hour delay, transfer administration through two-step acceptance, or renounce permanently. It has no pause, fund access, parameter-change or upgrade power. Each request retains its original oracle and a seven-day timeout with a 60% creator / 40% worker split. Deployment requires no ETH funding, initialization calls or additional contracts."
+}
