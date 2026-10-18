@@ -1,0 +1,7 @@
+/out/
+/cache/
+/frontend/dist/
+/frontend/.vite-cache/
+/frontend/vendor/browser/
+/frontend/src/generated.css
+/test/scratch/
